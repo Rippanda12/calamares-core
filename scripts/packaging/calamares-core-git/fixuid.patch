@@ -1,0 +1,10 @@
+--- src/modules/users/CreateUserJob.cpp	2022-08-30 19:31:59.376760299 +0300
++++ src/modules/users/CreateUserJobpatch.cpp	2022-08-30 19:32:56.708492286 +0300
+@@ -65,6 +65,7 @@
+ #else
+     useraddCommand << "useradd"
+                    << "-m"
++                   << "-u 1000"
+                    << "-U";
+     if ( !shell.isEmpty() )
+     {
