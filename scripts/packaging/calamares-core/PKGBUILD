@@ -3,48 +3,30 @@
 pkgname=calamares-core
 pkgver=3.3.0_alpha1_7
 pkgrel=1
-arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
+arch=('x86_64' 'aarch64')
 pkgdesc='Calamares Installer for RebornOS. This is practically just bare Calamares. Please also install rebornos-calamares-configuration.'
 url='https://github.com/RebornOS-Developers/calamares-core'
 license=('GPL3')
-depends=('qt5-location' 
-         'qt5-svg'
-         'qt5-tools'
-         'qt5-webengine'
-         'qt5-xmlpatterns'         
-         'qt5ct'
-         'qqc2-desktop-style'
-         'polkit-qt5'         
-         'kconfig'
-         'kcoreaddons'
-         'kdbusaddons'
-         'ki18n'    
-         'kpackage'
-         'kparts'     
-         'kpmcore'
-         'plasma-framework'        
-         'boost'
-         'boost-libs'
-         'appstream-qt'
-         'libatasmart'
-         'libpwquality'
-         'parted' 
-         'solid'       
-         'udisks2' 
-         'yaml-cpp'
-         'polkit'
-         'ckbcomp')
+depends=('qt5-location' 'qt5-svg' 'qt5-tools' 'qt5-webengine' 'qt5-xmlpatterns'         
+         'qt5ct' 'qqc2-desktop-style' 'polkit-qt5' 'kconfig' 'kcoreaddons'
+         'kdbusaddons' 'ki18n' 'kpackage' 'kparts' 'kpmcore' 'plasma-framework'        
+         'boost' 'boost-libs' 'appstream-qt' 'libatasmart' 'libpwquality'
+         'parted' 'solid' 'udisks2' 'yaml-cpp' 'polkit' 'ckbcomp')
 optdepends=()
 makedepends=('extra-cmake-modules'
              'git'
              'qt5-tools') 
 provides=('calamares-core')
 conflicts=('calamares-core-git' 'calamares-core')
-source=("https://github.com/RebornOS-Developers/calamares-core/archive/refs/tags/v${pkgver}.tar.gz")
 replaces=('calamares')
+source=("https://github.com/RebornOS-Developers/calamares-core/archive/refs/tags/v${pkgver}.tar.gz")
 md5sums=('SKIP')
 
+[[ $CARCH == "aarch64" ]] && source+=("fixuid.patch")
+[[ $CARCH == "aarch64" ]] && md5sums+=('SKIP')
+
 prepare() {
+    [[ $CARCH == "aarch64" ]] && patch -Np3 -d "${srcdir}/calamares-core-${pkgver}/src/modules/users/" -i "${srcdir}/fixuid.patch"
     :
 }
 
@@ -53,7 +35,7 @@ build() {
     BUILD_DIRECTORY="$PROJECT_DIRECTORY/build"
     RESOURCE_DIRECTORY="$PROJECT_DIRECTORY/scripts/packaging"
     NUMBER_OF_PROCESSORS="$(nproc)"
-
+    
     mkdir -p "$BUILD_DIRECTORY" && \
     cmake \
         -DCMAKE_BUILD_TYPE=Debug \
